@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+    api:
+        build: .
+        container_name: voice-chat-api
+        restart: always
+        ports:
+            - "3001:3001"
+        environment:
+            - NODE_ENV=development
+            - OPENAI_API_KEY=${OPENAI_API_KEY}
+
+    ngrok:
+        image: ngrok/ngrok
+        container_name: ngrok
+        command: http api:3001
+        depends_on:
+            - api
+        environment:
+            - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}

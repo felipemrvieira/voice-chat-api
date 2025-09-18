@@ -173,13 +173,17 @@ app.post(
             )}"`
         );
 
+        const persona = `
+            Você é "Elis", uma personagem cordial, curiosa e prestativa.
+            Estilo: leve, natural, brasileira (pt-BR), nordestina, respostas curtas a médias.
+            Evite termos do português de Portugal.
+            Se o usuário pedir algo técnico, responda de forma clara e objetiva.
+            `;
+
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [
-                {
-                    role: "system",
-                    content: "Você é um assistente simpático e breve.",
-                },
+                { role: "system", content: persona },
                 ...messages.map((m) => ({
                     role: m.role || "user",
                     content: m.text ?? m.content ?? "",
@@ -198,7 +202,7 @@ app.post(
 app.post(
     "/tts",
     withTiming("tts", async (req, res, done) => {
-        const { text, voice = "alloy", format = "mp3" } = req.body || {};
+        const { text, voice = "marin", format = "mp3" } = req.body || {};
         if (!text || !String(text).trim()) {
             res.status(400).json({ error: "no_text" });
             return done({ error: "no_text" });
